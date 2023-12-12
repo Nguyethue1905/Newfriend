@@ -44,5 +44,23 @@ class home
         $result = $db->pdo_query($sql);
         return $result;
     }
+    public function getCounttime(){
+        $db = new connect();
+        $sql = "SELECT
+        DATE(login_time) AS login_date,
+        COUNT(*) AS user_count
+    FROM
+        time_login
+    WHERE
+        login_time >= CURRENT_DATE - INTERVAL 6 DAY
+        AND login_time < CURRENT_DATE + INTERVAL 1 DAY
+    GROUP BY
+        DATE(login_time)
+    ORDER BY
+        login_date DESC";;
+
+        $result = $db->pdo_query($sql);
+        return $result;
     }
 
+}

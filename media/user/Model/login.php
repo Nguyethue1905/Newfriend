@@ -26,6 +26,12 @@ class login{
         $select = "select * from users where user_id = '$user_id'";
         return $db->pdo_query_one($select);
     }
+    function getupdatetime($user_id)
+    {
+        $db = new connect();
+        $select = "INSERT INTO `time_login` ( `user_id`, `login_time`) VALUES ('$user_id', NOW()); ";
+        return $db->pdo_query_one($select);
+    }
 }
 
 class singin {
@@ -36,11 +42,14 @@ class singin {
           $login = new login();
           $add = $login->checkuser($username, $password);
           $id = $login->getUserid($username, $password);
+         
           if($add == true){
             if ($id == true){
               foreach ($id as $ro){
-                $_SESSION['id'] = $ro['user_id'];
+                $_SESSION['id'] = $ro['user_id'] ?? 0;
                 $_SESSION['user'] = $username;
+                $user_id = $_SESSION['id'];
+                $time = $login->getupdatetime($user_id);
                 header("Location: ./index.php?act=home");
               }
             }

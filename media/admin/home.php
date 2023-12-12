@@ -112,11 +112,29 @@
                            <div class="full graph_revenue">
                               <div class="row">
                                  <div class="col-md-12">
+
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row column2 graph margin_bottom_30">
+                     <div class="col-md-l2 col-lg-12">
+                        <div class="white_shd full">
+                           <div class="full graph_head">
+                              <div class="heading1 margin_0">
+                                 <h2>Số Lượng User Đăng Nhập Trong 7 Ngày</h2>
+                              </div>
+                           </div>
+                           <div class="full graph_revenue">
+                              <div class="row">
+                                 <div class="col-md-12">
                                     <div class="area_chart">
                                        <?php
                                        $db = new home();
-                                       $result = $db->getCountgander();
-                                       // var_dump($resuft); exit();
+                                       $result = $db->getCounttime();
+
                                        // Kiểm tra và xử lý kết quả
                                        if ($result > 0) {
                                           // Khởi tạo mảng để lưu dữ liệu từ cơ sở dữ liệu
@@ -125,8 +143,47 @@
 
                                           // Đọc dữ liệu từ kết quả truy vấn
                                           foreach ($result as $row) {
-                                             $roles[] = $row['gander']; // Lưu vai trò (role) vào mảng nhãn
-                                             $totals[] = $row['total']; // Lưu tổng số vào mảng dữ liệu
+                                             // Chuyển đổi ngày thành thứ trong tuần
+                                             $dayOfWeek = date('N', strtotime($row['login_date']));
+                                             switch ($dayOfWeek) {
+                                                case 1:
+                                                   $dayOfWeekText = 'Thứ Hai';
+                                                   $backgroundColor = 'rgba(255, 99, 132, 0.5)'; // Màu đỏ
+                                                   break;
+                                                case 2:
+                                                   $dayOfWeekText = 'Thứ Ba';
+                                                   $backgroundColor = 'rgba(54, 162, 235, 0.5)'; // Màu xanh dương
+                                                   break;
+                                                case 3:
+                                                   $dayOfWeekText = 'Thứ Tư';
+                                                   $backgroundColor = 'rgba(255, 206, 86, 0.5)'; // Màu vàng
+                                                   break;
+                                                case 4:
+                                                   $dayOfWeekText = 'Thứ Năm';
+                                                   $backgroundColor = 'rgba(75, 192, 192, 0.5)'; // Màu xanh lá cây
+                                                   break;
+                                                case 5:
+                                                   $dayOfWeekText = 'Thứ Sáu';
+                                                   $backgroundColor = 'rgba(153, 102, 255, 0.5)'; // Màu tím
+                                                   break;
+                                                case 6:
+                                                   $dayOfWeekText = 'Thứ Bảy';
+                                                   $backgroundColor = 'rgba(255, 159, 64, 0.5)'; // Màu cam
+                                                   break;
+                                                case 7:
+                                                   $dayOfWeekText = 'Chủ Nhật';
+                                                   $backgroundColor = 'rgba(50, 205, 50, 0.5)'; // Màu xanh lá cây sáng
+                                                   break;
+                                                default:
+                                                   $dayOfWeekText = '';
+                                                   $backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Màu đen mặc định
+                                             }
+
+                                             // Lưu thứ trong tuần vào mảng nhãn
+                                             $roles[] = $dayOfWeekText;
+
+                                             // Lưu tổng số vào mảng dữ liệu
+                                             $totals[] = $row['user_count'];
                                           }
 
                                           // Chuyển đổi mảng thành chuỗi JSON để sử dụng trong biểu đồ
@@ -135,31 +192,33 @@
                                        } else {
                                           echo "Không có dữ liệu từ cơ sở dữ liệu.";
                                        }
-
                                        ?>
                                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                                       <canvas id="user" width="800" height="400"></canvas>
+                                       <canvas id="time" width="800" height="400"></canvas>
 
                                        <script>
                                           var roles = <?php echo $roles_json; ?>;
                                           var totals = <?php echo $totals_json; ?>;
+                                          var backgroundColors = [
+                                             'rgba(255, 99, 132, 0.5)',
+                                             'rgba(54, 162, 235, 0.5)',
+                                             'rgba(255, 206, 86, 0.5)',
+                                             'rgba(75, 192, 192, 0.5)',
+                                             'rgba(153, 102, 255, 0.5)',
+                                             'rgba(255, 159, 64, 0.5)',
+                                             'rgba(50, 205, 50, 0.5)'
+                                          ];
 
-                                          var ctx = document.getElementById('user').getContext('2d');
+                                          var ctx = document.getElementById('time').getContext('2d');
                                           var myChart = new Chart(ctx, {
                                              type: 'bar',
                                              data: {
                                                 labels: roles,
                                                 datasets: [{
-                                                   label: 'Thông Kế giới tính của tất cả User',
+                                                   label: 'Số Lượng User Online Trong 7 Ngày',
                                                    data: totals,
-                                                   backgroundColor: [
-                                                      'rgba(54, 162, 235, 0.5)',
-                                                      'rgba(255, 99, 132, 0.5)'
-                                                   ],
-                                                   borderColor: [
-                                                      'rgba(54, 162, 235, 0.5)',
-                                                      'rgba(255, 99, 132, 0.5)'
-                                                   ],
+                                                   backgroundColor: backgroundColors,
+                                                   borderColor: backgroundColors,
                                                    borderWidth: 1,
                                                    barThickness: 60
                                                 }]
@@ -173,8 +232,9 @@
                                              }
                                           });
                                        </script>
+                                    </div>
 
-                                    </div>'
+
                                  </div>
                               </div>
                            </div>
@@ -218,19 +278,19 @@
 
                                        ?>
                                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                                       <canvas id="myChart" width="800" height="400"></canvas>
+                                       <canvas id="user" width="800" height="400"></canvas>
 
                                        <script>
                                           var roles = <?php echo $roles_json; ?>;
                                           var totals = <?php echo $totals_json; ?>;
 
-                                          var ctx = document.getElementById('myChart').getContext('2d');
+                                          var ctx = document.getElementById('user').getContext('2d');
                                           var myChart = new Chart(ctx, {
                                              type: 'bar',
                                              data: {
                                                 labels: roles,
                                                 datasets: [{
-                                                   label: 'Thông Kế giới tính của tất cả User',
+                                                   label: 'Thông Kế Bài Post Của Từng User',
                                                    data: totals,
                                                    backgroundColor: [
                                                       'rgba(54, 162, 235, 0.5)',
@@ -253,7 +313,7 @@
                                              }
                                           });
                                        </script>
-                                       
+
                                     </div>'
                                  </div>
                               </div>
