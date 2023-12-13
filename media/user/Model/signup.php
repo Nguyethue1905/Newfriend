@@ -10,7 +10,7 @@ class signup
     public function getAdd($username, $email, $password)
     {
         $db = new connect();
-        $sql = "INSERT INTO users (`username`,`email`,`password`) VALUES ('$username' ,'$email','$password')";
+        $sql = "INSERT INTO users (`username`,`email`,`password`) VALUES ('$username','$email','$password')";
         $result = $db->pdo_query($sql);
         return $result;
     }
@@ -55,23 +55,35 @@ class register
         if (isset($_POST['btn-signup'])) {
             $username = $_POST['username'] ?? "";
             $email = $_POST['email'] ?? "";
-            $password = $_POST['password'] ?? "";
+            $passwords = $_POST['password'] ?? "";
             $data = new signup();
+            $login = new login();
             $setemail = $data->checkIfEmailExists($email);
-            // var_dump($setemail); exit();
+            $all_user = $login->all_user();
+            if ($all_user == true){
+                foreach($all_user as $rowls){
+                    if ($username == $rowls['username']){
+                        echo '<div style="color:red;">Tên đăng nhập đã tồn tại</div>';
+                        return;
+                    }
+                }
+            }
             if ($setemail["count"] === "1") {
                 echo '<div style="color:red;">Email đã tồn tại</div>';
             }elseif(($setemail["count"] === "0") ){
                 if ($_POST['password'] == $_POST['re_password']) {
+                    $password = password_hash($passwords, PASSWORD_DEFAULT);
                     $data->getAdd($username, $email, $password);
                     $_SESSION['user'] = $username;
-                    $login = new login();
-                    $id = $login->getUserid($username, $password);
-                    foreach ($id as $ro){
-                        $_SESSION['id'] = $ro['user_id'];
-                        $_SESSION['user'] = $username;
-                        header('Location: ./index.php?act=home');
+                    if (password_verify($passwords, $password)){
+                        $id = $login->getUserid($username, $password);
+                        foreach ($id as $ro){
+                            $_SESSION['id'] = $ro['user_id'];
+                            $_SESSION['user'] = $username;
+                            header('Location: ./index.php?act=home');
+                        }
                     }
+                 
                   
                 } else {
                     echo '<div style="color:red;">Mật khẩu chưa trùng khớp</div>';

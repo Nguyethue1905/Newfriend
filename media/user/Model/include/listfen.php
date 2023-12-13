@@ -116,7 +116,7 @@ $select = $db->getList($user_id);
                         <img src="./View/images/resources/friend-avatar4.jpg" alt="">
                         <span class="status f-off"></span>
                     </figure>
-<div class="friendz-meta">
+                        <div class="friendz-meta">
                         <a href="time-line.html">bucky barnes</a>
                     </div>
                 </li>

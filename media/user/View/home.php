@@ -44,7 +44,7 @@ $select = $db->getList($user_id);
 
     ?>
     <div class="central-meta item">
-        <div class="user-post">
+        <div class="user-post<?= $_SESSION['posts_id'] ?>">
             <div class="friend-info">
                 <figure>
                     <?php
@@ -74,70 +74,66 @@ $select = $db->getList($user_id);
                     </p>
                 </div>
                 <?php
-$curl = curl_init();
+// $curl = curl_init();
 
-// Đặt URL của API Text-to-Speech của FPT AI
-curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://api.fpt.ai/hmi/tts/v5',
-    CURLOPT_CUSTOMREQUEST => 'POST',
+// // Đặt URL của API Text-to-Speech của FPT AI
+// curl_setopt_array($curl, array(
+//     CURLOPT_URL => 'https://api.fpt.ai/hmi/tts/v5',
+//     CURLOPT_CUSTOMREQUEST => 'POST',
 
-    // Thay thế chuỗi trống này bằng văn bản bạn muốn chuyển đổi thành giọng nói
-    CURLOPT_POSTFIELDS => $get['content'],
+//     // Thay thế chuỗi trống này bằng văn bản bạn muốn chuyển đổi thành giọng nói
+//     CURLOPT_POSTFIELDS => $get['content'],
 
-    // Thay đổi 'speed' thành giá trị mong muốn, ví dụ 'speed: 0' cho tốc độ bình thường
-    CURLOPT_HTTPHEADER => array(
-        'api-key: twdQKkHlJUB2T81ohp3uR6xNzGMiqwpP',
-        'speed: 0', // Điều chỉnh tốc độ nếu cần
-        'voice: banmai' // Bạn có thể chọn giọng 'banmai' hoặc giọng khác nếu có
-    ),
+//     // Thay đổi 'speed' thành giá trị mong muốn, ví dụ 'speed: 0' cho tốc độ bình thường
+//     CURLOPT_HTTPHEADER => array(
+//         'api-key: twdQKkHlJUB2T81ohp3uR6xNzGMiqwpP',
+//         'speed: 0', // Điều chỉnh tốc độ nếu cần
+//         'voice: banmai' // Bạn có thể chọn giọng 'banmai' hoặc giọng khác nếu có
+//     ),
 
-    // Tắt kiểm tra chứng chỉ SSL
-    CURLOPT_SSL_VERIFYPEER => false,
-    CURLOPT_SSL_VERIFYHOST => false,
-    CURLOPT_RETURNTRANSFER => true, // Return the response as a string
-));
+//     // Tắt kiểm tra chứng chỉ SSL
+//     CURLOPT_SSL_VERIFYPEER => false,
+//     CURLOPT_SSL_VERIFYHOST => false,
+//     CURLOPT_RETURNTRANSFER => true, // Return the response as a string
+// ));
 
-$response = curl_exec($curl);
-$err = curl_error($curl);
-$http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+// $response = curl_exec($curl);
+// $err = curl_error($curl);
+// $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-curl_close($curl);
+// curl_close($curl);
 
-if ($err) {
-    // Xử lý lỗi cURL
-    echo 'cURL Error #:' . $err;
-} else {
-    // Kiểm tra trạng thái HTTP của phản hồi
-    if ($http_code == 200) {
-        // Xử lý phản hồi thành công
-        $responseArray = json_decode($response, true);
+// if ($err) {
+//     // Xử lý lỗi cURL
+//     echo 'cURL Error #:' . $err;
+// } else {
+//     // Kiểm tra trạng thái HTTP của phản hồi
+//     if ($http_code == 200) {
+//         // Xử lý phản hồi thành công
+//         $responseArray = json_decode($response, true);
 
-        if (is_array($responseArray) && isset($responseArray['async'])) {
-            $asyncValue = $responseArray['async'];
+//         if (is_array($responseArray) && isset($responseArray['async'])) {
+//             $asyncValue = $responseArray['async'];
 
-            // Output the audio file URL
+//             // Output the audio file URL
 
-            echo '<audio controls="controls" autoplay="autoplay">
-                        <source src="' . $asyncValue . '" type="audio/mp3" />
-                      Your browser does not support the audio element.
-                      </audio>';
+//             echo '<audio controls="controls" autoplay="autoplay">
+//                         <source src="' . $asyncValue . '" type="audio/mp3" />
+//                       Your browser does not support the audio element.
+//                       </audio>';
 
-            // You can embed the audio in an HTML <audio> element here if needed
+//             // You can embed the audio in an HTML <audio> element here if needed
 
-        } else {
-            echo 'Không tìm thấy khóa "async" trong mảng hoặc dữ liệu không hợp lệ.';
-        }
-    } else {
-        // Xử lý trạng thái lỗi từ phản hồi
-        echo 'Error - HTTP Status Code: ' . $http_code;
-    }
-}
+//         } else {
+//             echo 'Không tìm thấy khóa "async" trong mảng hoặc dữ liệu không hợp lệ.';
+//         }
+//     } else {
+//         // Xử lý trạng thái lỗi từ phản hồi
+//         echo 'Error - HTTP Status Code: ' . $http_code;
+//     }
+// }
 ?>
 
-
-
-
-                
                 <div class="post-meta-img">
 
                     <?php
@@ -156,8 +152,11 @@ if ($err) {
                     <div class="we-video-info">
                         <ul>
                             <!-- like -->
+
                             <li>
-                                <span class="like" data-postid="<?= $get['posts_id'] ?>" title="like">
+
+                                <span class="like" data-postid="<?= $get['posts_id'] ?>"
+                                    title="like">
                                     <?php
                                         $getdt = new posts();
                                         $user_id = $_SESSION['id'];
@@ -167,28 +166,133 @@ if ($err) {
                                         if ($like) {
                                             $idLike = $getdt->getIdLike($posts_id, $user_id);
                                             echo '
-                                                    <a type="submit" class="unlikeInput"      name="unlikeInput" data-postunlike="' . $idLike['postlike_id'] . '">
+                                                    <a type="submit" class="unlikeInput" name="unlikeInput" data-postunlike="' . $idLike['postlike_id'] . '">
                                                         <i class="fa-solid fa-heart"style="color: #08d5a9;font-size:24px;"></i>
                                                     </a>
                                                 '
                                                 ;
                                             if (isset($_POST['unlike'])) {
-                                                $postlike_id = $idLike['postlike_id'];;
+                                                $postlike_id = $idLike['postlike_id'];
                                                 $db = new posts();
                                                 $delete = $db->deleteLike($postlike_id);
-                                                header('Location: ./index.php?act=home');
-                                                exit();
+                                                // header('Location: ./index.php?act=home');    
                                             }
                                         } elseif ($like == "") {
                                             echo '
                                                     
-                                                    <a type="submit"  <a class="likeInput"  name="likeInput" data-postlike="' . $get['posts_id'] . '">
+                                                    <a type="submit" class="likeInput"  name="likeInput" data-postlike="' . $get['posts_id'] . '">
                                                     <i class="fa-regular fa-heart" style="color: #08d5a9; font-size:24px;"></i> </a>
                                                 ';
                                         }
 
                                         ?>
+
+
                                 </span>
+                                <script>
+                                    jQuery(document).ready(function($) {
+                                        $(document).on("click", ".likeInput", function(event) {
+                                            event.preventDefault();
+                                            var button = $(this);
+                                            var post_id = button.data('postlike');
+                                            var user_id_in_js = <?php echo json_encode($user_id); ?>;
+
+                                            $.ajax({
+                                                url: "/user/ajax.php",
+                                                method: "POST",
+                                                data: {
+                                                    action: "addLike",
+                                                    posts_id: post_id,
+                                                    user_id: user_id_in_js,
+
+                                                },
+                                                success: function(result) {
+                                                    $("#weather-temp").html("<strong>" +
+                                                        result + "</strong> degrees");
+                                                    console.log(result);
+                                                    var result = JSON.parse(result);
+                                                    if (result.status == 'success') {
+                                                        $('.user-post<?= $get['posts_id'] ?>').load(location.href + ' .user-post<?= $get['posts_id'] ?>');
+                                                        console.log('thêm thành công');
+
+                                                    } else {
+                                                        console.log('lỗi');
+                                                    }
+
+                                                }
+                                            });
+                                        });
+                                    });
+
+                                    jQuery(document).ready(function($) {
+                                        $(document).on("click", ".unlikeInput", function(event) {
+                                            event.preventDefault();
+                                            var button = $(this);
+                                            var like_id = button.data('postunlike');
+
+                                            console.log(like_id);
+                                            $.ajax({
+                                                url: "/user/ajax.php",
+                                                method: "POST",
+                                                data: {
+                                                    action: "deleteLike",
+                                                    postlike_id: like_id
+
+                                                },
+                                                success: function(result) {
+                                                    $("#weather-temp").html("<strong>" +
+                                                        result + "</strong> degrees");
+                                                    console.log(result);
+                                                    var result = JSON.parse(result);
+                                                    // $('.like').load(location.href + ' .like');
+                                                    if (result.status === 'success') {
+                                                        $('.user-post<?= $get['posts_id'] ?>').load(location.href + ' .user-post<?= $get['posts_id'] ?>');
+                                                        console.log('xoá thành công');
+
+                                                    } else {
+                                                        console.log('lỗi');
+                                                    }
+                                                }
+                                            });
+                                        });
+                                    });
+
+
+                                    jQuery(document).ready(function($) {
+                                        $(document).on("click", ".delete", function(event) {
+                                            event.preventDefault();
+                                            var button = $(this);
+                                            var post_id = button.data('delete');
+                                            var user_id_in_js = <?php echo json_encode($user_id); ?>;
+                                            $.ajax({
+                                                url: "/user/ajax.php",
+                                                method: "POST",
+                                                data: {
+                                                    action: "deletepost",
+                                                    posts_id: post_id,
+                                                    user_id: user_id_in_js
+                                                },
+                                                success: function(text) {
+                                                    $("#weather-temp").html("<strong>" +
+                                                        text + "</strong> degrees");
+                                                    console.log(text);
+                                                    if (text == true) {
+                                                        $('.user-post<?= $get['posts_id'] ?>').load(location.href + ' .user-post<?= $get['posts_id'] ?>');
+                                                        console.log('Xóa thành công');
+                                                    } else {
+                                                        console.log('lỗi');
+                                                    }
+
+                                                }
+                                            });
+                                        });
+                                    });
+
+
+                                  
+                                    </script>
+
+
                             </li>
 
                             <!-- cmt -->
@@ -226,7 +330,43 @@ if ($err) {
                     </div>
                 </div>
             </div>
+            <script>
+                                    jQuery(document).ready(function($) {
+                                        $(document).on("click", ".submit-cmt", function(event) {
+                                            event.preventDefault();
+                                            var button = $(this);
+                                            var post_id = button.data('post');
+                                            var content = $('#binhluan_' + post_id).val();
+                                            var user_id_in_js = <?php echo json_encode($user_id); ?>;
 
+                                            $.ajax({
+                                                url: "/user/ajax.php",
+                                                method: "POST",
+                                                data: {
+                                                    action: "addCmt",
+                                                    posts_id: post_id,
+                                                    user_id: user_id_in_js,
+                                                    comment: content
+                                                },
+                                                success: function(result) {
+                                                    $("#weather-temp").html("<strong>" +
+                                                        result + "</strong> degrees");
+                                                    console.log(result);
+                                                    if (result == true) {
+                                                        $('.user-post<?= $get['posts_id'] ?>').load(location.href +
+                                                            ' .user-post<?= $get['posts_id'] ?>');
+                                                        console.log('thành công');
+                                                    } else {
+                                                        console.log('lỗi');
+                                                    }
+
+                                                }
+                                            });
+                                        });
+                                    });
+            </script>
+
+            
             <!--cmt deatail start -->
             <div class="coment-area" style="margin-top: 30px;">
                 <ul class="we-comet" style=" max-height: 300px;  overflow-y: auto;">
@@ -253,7 +393,7 @@ if ($err) {
 
                             if ($hours > 0) {
                                 $timeString .= $hours . ' giờ ';
-                            }
+                            }   
 
                             if ($minutes > 0) {
                                 $timeString .= $minutes . ' phút';
@@ -291,12 +431,17 @@ if ($err) {
                 </ul>
             </div>
             <!-- cmt deatail end -->
-            
 
         </div>
     </div>
     <?php }  ?>
+
 </div>
+
+
+
+
+
 
 <?php
                 // if (isset($_POST['btn'])){
@@ -317,135 +462,4 @@ $user_id = $_SESSION['id'];
 
 ?>
 
-<script>
-jQuery(document).ready(function($) {
-    $(document).on("click", ".delete", function() {
-        var button = $(this);
-        var post_id = button.data('delete');
-        var user_id_in_js = <?php echo json_encode($user_id); ?>;
-        $.ajax({
-            url: "/user/ajax.php",
-            method: "POST",
-            data: {
-                action: "deletepost",
-                posts_id: post_id,
-                user_id: user_id_in_js
-            },
-            success: function(text) {
-                $("#weather-temp").html("<strong>" + text + "</strong> degrees");
-                console.log(text);
-                if (text == true) {
-                    
-                    console.log('Xóa thành công ');
-                } else {
-                    console.log('lỗi');
-                }
-                $('.user-post').load(location.href + ' .user-post');
-            }
-        });
-    });
-});
 
-
-jQuery(document).ready(function($) {
-    $(document).on("click", ".submit-cmt", function() {
-        var button = $(this);
-        var post_id = button.data('post');
-        var content = $('#binhluan_' + post_id).val();
-        var user_id_in_js = <?php echo json_encode($user_id); ?>;
-
-        $.ajax({
-            url: "/user/ajax.php",
-            method: "POST",
-            data: {
-                action: "addCmt",
-                posts_id: post_id,
-                user_id: user_id_in_js,
-                comment: content
-            },
-            success: function(result) {
-                $("#weather-temp").html("<strong>" + result + "</strong> degrees");
-                console.log(result);
-                if (result == true) {
-                    
-                    console.log('thành công');
-                } else {
-                    console.log('lỗi');
-                }
-                $('.user-post').load(location.href + ' .user-post');
-            }
-        });
-    });
-});
-
-
-
-//like post
-jQuery(document).ready(function($) {
-    $(document).on("click", ".likeInput", function() {
-        var button = $(this);
-        var post_id = button.data('postlike');
-        var user_id_in_js = <?php echo json_encode($user_id); ?>;
-
-        $.ajax({
-            url: "/user/ajax.php",
-            method: "POST",
-            data: {
-                action: "addLike",
-                posts_id: post_id,
-                user_id: user_id_in_js,
-
-            },
-            success: function(result) {
-                $("#weather-temp").html("<strong>" + result + "</strong> degrees");
-                console.log(result);
-                
-                if (result == true) {
-                    console.log('thành công');
-                } else {
-                    console.log('lỗi');
-                }
-                $('.user-post').load(location.href + ' .user-post');
-            }
-        });
-    });
-});
-
-//unlike post
-jQuery(document).ready(function($) {
-    $(document).on("click", ".unlikeInput", function() {
-        var button = $(this);
-        var like_id = button.data('postunlike');
-
-        console.log(like_id);
-        $.ajax({
-            url: "/user/ajax.php",
-            method: "POST",
-            data: {
-                action: "deleteLike",
-                postlike_id: like_id
-
-
-            },
-            success: function(result) {
-                $("#weather-temp").html("<strong>" + result + "</strong> degrees");
-                console.log(result);
-              
-                if (result == true) {
-                    console.log('thành công');
-                } else {
-                    console.log('lỗi');
-                }
-                $('.user-post').load(location.href + ' .user-post');
-            }
-        });
-    });
-});
-
-function cmt_user(){
-    var inputContainer = document.getElementById("all_cmt");
-        inputContainer.style.display = "block";
-}
-
-
-</script>

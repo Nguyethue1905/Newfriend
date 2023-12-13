@@ -32,13 +32,13 @@
 								echo '<li>
 								<div class="nearly-pepls">
 									<figure>
-										<a href="javascrip:;" title=""><img src="./View/images/uploads/'.$avatar.'" alt=""></a>
+										<a href="" title=""><img src="./View/images/uploads/'.$avatar.'" alt=""></a>
 									</figure>
 									<div class="pepl-info">
 										<h4><a href="./index.php?act=useracout&id='.$user.'" title="">'.$iem['name_count'].'</a></h4>
 										<span>2 bạn chung</span>
-										<a href="javascrip:;" title="" class="add-butn more-action fens" data-idhu = "'.$iem['friendship_id'].'" data-ripple="">Hủy kêt bạn</a>
-										<a href="javascrip:;" title="" class="add-butn" data-ripple="">Nhắn tin</a>
+										<a href="" title="" class="add-butn more-action fens" data-idhu = "'.$iem['friendship_id'].'" data-ripple="">Hủy kêt bạn</a>
+										<a href="" title="" class="add-butn" data-ripple="">Nhắn tin</a>
 									</div>
 								</div>
 							</li>';
@@ -80,9 +80,9 @@
 												<h4><a href="time-line.html" title="">'.$row['name_count'].'</a></h4>
 												<span>ftv model</span>
 												
-												<a href="javascrip:;" title="" class="add-butn more-action btnls"   data-idship="'.$friendship_id.'" data-ripple="" >Xóa lời mời</a>
+												<a href="" title="" class="add-butn more-action btnls"   data-idship="'.$friendship_id.'" data-ripple="" >Xóa lời mời</a>
 			
-												<a href="javascrip:;" title="" class="add-butn btn-idyes" data-idyes="'.$friendship_id.'" data-ripple="">Đồng ý</a>
+												<a href="" title="" class="add-butn btn-idyes" data-idyes="'.$friendship_id.'" data-ripple="">Đồng ý</a>
 											
 											</div>
 										</div>
