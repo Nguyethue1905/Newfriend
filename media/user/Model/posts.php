@@ -7,6 +7,14 @@ class posts
     var $posts_id = null;
     var $friendship_id  = null;
     var $postlike_id  = null;
+
+    public function countlike($posts_id)
+    {
+        $db = new connect();
+        $sql =  "SELECT COUNT(postlike_id) FROM `postlike` WHERE postlike.posts_id = '.$posts_id.'";
+        $result = $db->pdo_query($sql);
+        return $result;
+    }
     
     public function addPost($user_id, $content)
     {

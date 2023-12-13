@@ -74,14 +74,7 @@ class looking_for_friends
         $result = $db->pdo_query($sql);
         return $result;
     }
-    public function notifications($user_id)
-    {
-        $db = new connect();
-        $sql =  "SELECT userproflie.name_count AS name_fl, userproflie.avatar AS avatar, postscomment.comment, postscomment.user_id as user_cm, posts.content as content, postscomment.date_cmt, posts.posts_id,postscomment.cmt_id 
-        FROM postscomment INNER JOIN users ON users.user_id = postscomment.user_id INNER JOIN userproflie ON users.user_id = userproflie.user_id INNER JOIN friendship ON users.user_id = friendship.user_id INNER JOIN posts ON users.user_id = posts.user_id WHERE friendship.status = 'Kết bạn thành công' AND (friendship.following_id = '$user_id' OR friendship.user_id = '$user_id') GROUP BY name_fl, avatar, postscomment.comment,user_cm,content,  postscomment.date_cmt,posts.posts_id,postscomment.cmt_id";
-        $result = $db->pdo_query($sql);
-        return $result;
-    }
+
 
     public function udpnotifications($friendship_id)
     {
@@ -105,6 +98,80 @@ class looking_for_friends
         $sql =  "SELECT COUNT(friendship.status) as total
         FROM friendship
         WHERE (friendship.following_id = '$user_id' OR friendship.user_id = '$user_id') AND status = 'Đã gữi lời mời'";
+        $result = $db->pdo_query_one($sql);
+        return $result;
+    }
+
+    //thong_bao
+
+    public function notifications_cmt($user_id)
+    {
+        $db = new connect();
+        $sql =  "SELECT users.user_id, userproflie.name_count, userproflie.avatar, posts.posts_id, 
+        postscomment.comment, postscomment.cmt_id, postscomment.date_cmt, friendship.friendship_id,friendship.following_id
+        FROM users 
+        INNER JOIN userproflie ON users.user_id = userproflie.user_id 
+        INNER JOIN posts ON users.user_id = posts.user_id 
+        INNER JOIN postscomment ON posts.posts_id = postscomment.posts_id 
+        INNER JOIN friendship ON users.user_id = friendship.user_id OR users.user_id = friendship.following_id 
+        WHERE ((friendship.status = 'Kết bạn thành công') AND (friendship.user_id = $user_id OR friendship.following_id = $user_id))
+        AND users.user_id != $user_id 
+        GROUP BY posts.posts_id,userproflie.name_count,userproflie.avatar,postscomment.date_cmt,postscomment.comment,
+        friendship.friendship_id,friendship.following_id ,postscomment.cmt_id 
+        ORDER BY postscomment.date_cmt DESC;";
+        $result = $db->pdo_query($sql);
+        return $result;
+    }
+
+    public function notifications_posts($user_id)
+    {
+        $db = new connect();
+        $sql = "SELECT users.user_id, userproflie.name_count, userproflie.avatar, posts.posts_id, posts.content, posts.date_post
+        FROM users
+        INNER JOIN userproflie ON users.user_id = userproflie.user_id
+        INNER JOIN posts ON users.user_id = posts.user_id
+        INNER JOIN friendship ON users.user_id = friendship.user_id OR users.user_id = friendship.following_id 
+        WHERE ((friendship.status = 'Kết bạn thành công')
+        AND (friendship.user_id = $user_id OR friendship.following_id = $user_id))
+        AND users.user_id !=$user_id
+        GROUP BY posts.posts_id,userproflie.name_count,userproflie.avatar
+        ORDER BY posts.date_post DESC";
+        $result = $db->pdo_query($sql);
+        return $result;
+    }
+
+    public function notifications_likes($user_id)
+    {
+        $db = new connect();
+        $sql = "SELECT users.user_id, userproflie.name_count, userproflie.avatar, 
+        posts.posts_id,friendship.friendship_id,friendship.following_id, postlike.postlike_id, postlike.user_id 
+        FROM users 
+        INNER JOIN userproflie ON users.user_id = userproflie.user_id 
+        INNER JOIN posts ON users.user_id = posts.user_id 
+        INNER JOIN postlike ON posts.posts_id = postlike.posts_id 
+        INNER JOIN friendship ON users.user_id = friendship.user_id OR users.user_id = friendship.following_id 
+        WHERE ((friendship.status = 'Kết bạn thành công') AND (friendship.user_id = $user_id OR friendship.following_id = $user_id)) 
+        AND users.user_id != $user_id
+        GROUP BY posts.posts_id,userproflie.name_count,userproflie.avatar,postlike.postlike_id,
+        postlike.user_id, friendship.friendship_id,friendship.following_id 
+        ORDER BY postlike.datetime DESC;";
+        $result = $db->pdo_query($sql);
+        return $result;
+    }
+
+
+    public function bell($user_id)
+    {
+        $db = new connect();
+        $sql =  "SELECT * FROM (
+            (SELECT postscomment.date_cmt AS date FROM postscomment)
+            UNION ALL
+            (SELECT posts.date_post AS date  FROM posts)
+            UNION ALL
+            (SELECT postlike.datetime AS date FROM postlike)
+        ) AS combined
+        ORDER BY combined.date DESC
+        ";
         $result = $db->pdo_query_one($sql);
         return $result;
     }

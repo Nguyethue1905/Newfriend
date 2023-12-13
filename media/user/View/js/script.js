@@ -421,9 +421,9 @@ function toggleElements() {
 //end
 
 
-//Upload posts
-function selectForm() {
-    var element = document.getElementById("images-post");
-        element.style.display = "block"; 
-}
+// //Upload posts
+// function selectForm() {
+//     var element = document.getElementById("images-post");
+//         element.style.display = "block"; 
+// }
 
