@@ -247,7 +247,7 @@ $select = $db->getList($user_id);
                                                         var result = JSON.parse(result);
                                                         // $('.like').load(location.href + ' .like');
                                                         if (result.status === 'success') {
-                                                            location.reload();
+                                                            $('.user-post<?= $get['posts_id'] ?>').load(location.href + ' .user-post<?= $get['posts_id'] ?>');
                                                             console.log('xoá thành công');
 
                                                         } else {
@@ -277,12 +277,11 @@ $select = $db->getList($user_id);
                                                             text + "</strong> degrees");
                                                         console.log(text);
                                                         if (text == true) {
-                                                            location.reload();
+                                                            $('.user-post<?= $get['posts_id'] ?>').load(location.href + ' .user-post<?= $get['posts_id'] ?>');
                                                             console.log('Xóa thành công');
                                                         } else {
                                                             console.log('lỗi');
                                                         }
-
                                                     }
                                                 });
                                             });
@@ -323,15 +322,11 @@ $select = $db->getList($user_id);
                                     <a class="inputs submit-cmt" type="submit" name="submit-cmt" data-post="<?= $get['posts_id'] ?>" placeholder="Bình luận"> Gửi</a>
                                 </div>
                             </form>
-
                         </div>
                     </div>
                 </div>
 
             </div>
-
-
-
             <!--cmt deatail start -->
             <div class="coment-area" style="margin-top: 30px;">
                 <ul class="we-comet" style=" max-height: 300px;  overflow-y: auto;">
@@ -381,6 +376,7 @@ $select = $db->getList($user_id);
                             <div class="we-comment">
                                 <div class="coment-head">
                                     <h5><a href="./index.php?act=useracout&id=<?= $user_post ?>" title=""><?= $name ?></a><?= $get['name_count'] ?></a></h5>
+
                                     <span><?= $timeString ?></span>
                                     <button onclick="cmt_user()" style="border: none;"><i class="fa fa-reply"></i></button>
                                 </div>
@@ -397,7 +393,6 @@ $select = $db->getList($user_id);
                 </ul>
             </div>
             <!-- cmt deatail end -->
-
 
         </div>
     <?php }  ?>
@@ -430,6 +425,7 @@ $user_id = $_SESSION['id'];
 ?>
 
 <script>
+
     jQuery(document).ready(function($) {
         $(document).on("click", ".submit-cmt", function(event) {
             event.preventDefault();

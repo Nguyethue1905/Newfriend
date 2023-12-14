@@ -6,7 +6,6 @@
 			<div class="notification-box">
 				<ul>
 					<?php
-
 					$user_id = $_SESSION['id'];
 					$looking_for_friends = new looking_for_friends();
 					$bell = $looking_for_friends->bell($user_id);
@@ -33,13 +32,12 @@
 									<p style="font-size:17px;">' . $profile['name_count'] . '</p> đã bình luận bài viết của bạn
 									<span>' . $item['datetime'] . '</span>
 								</div>
+
 						</li>';
 						}else{
 							echo "";
 						}
 					}
-				
-
 					?>
 				</ul>
 			</div>
