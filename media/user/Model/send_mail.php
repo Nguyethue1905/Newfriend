@@ -16,7 +16,7 @@ $emailContent = "
     <p>Dưới đây là mã OTP để khôi phục tài khoản của bạn:</p>
     <ul>
         <li>Email của bạn là: ".$_SESSION['email']."</li>
-        <li>Mã: ".$randomNumber."</li>
+        <li>Mã OTP: ".$randomNumber."</li>
     </ul>
 ";
 
@@ -38,7 +38,7 @@ try {
 
     //Content
     $mail->isHTML(true);                                  
-    $mail->Subject = 'Mã code reset password';
+    $mail->Subject = 'NewFriend send reset password';
     $mail->Body =$emailContent; 
 
     $mail->send();

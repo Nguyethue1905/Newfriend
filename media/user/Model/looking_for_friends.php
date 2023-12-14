@@ -10,7 +10,7 @@ class looking_for_friends
     var $following_id = null;
     var $friendship_id = null;
     var $user_id_s = null;
-    
+
     public function search_friends($searchfr)
     {
         $db = new connect();
@@ -118,7 +118,7 @@ class looking_for_friends
         AND users.user_id != $user_id 
         GROUP BY posts.posts_id,userproflie.name_count,userproflie.avatar,postscomment.date_cmt,postscomment.comment,
         friendship.friendship_id,friendship.following_id ,postscomment.cmt_id 
-        ORDER BY postscomment.date_cmt DESC;";
+        ORDER BY postscomment.date_cmt DESC as cmt ";
         $result = $db->pdo_query($sql);
         return $result;
     }
@@ -135,7 +135,7 @@ class looking_for_friends
         AND (friendship.user_id = $user_id OR friendship.following_id = $user_id))
         AND users.user_id !=$user_id
         GROUP BY posts.posts_id,userproflie.name_count,userproflie.avatar
-        ORDER BY posts.date_post DESC";
+        ORDER BY posts.date_post DESC ";
         $result = $db->pdo_query($sql);
         return $result;
     }
@@ -154,7 +154,7 @@ class looking_for_friends
         AND users.user_id != $user_id
         GROUP BY posts.posts_id,userproflie.name_count,userproflie.avatar,postlike.postlike_id,
         postlike.user_id, friendship.friendship_id,friendship.following_id 
-        ORDER BY postlike.datetime DESC;";
+        ORDER BY postlike.datetime DESC as likes ";
         $result = $db->pdo_query($sql);
         return $result;
     }
@@ -163,16 +163,38 @@ class looking_for_friends
     public function bell($user_id)
     {
         $db = new connect();
-        $sql =  "SELECT * FROM (
-            (SELECT postscomment.date_cmt AS date FROM postscomment)
-            UNION ALL
-            (SELECT posts.date_post AS date  FROM posts)
-            UNION ALL
-            (SELECT postlike.datetime AS date FROM postlike)
-        ) AS combined
-        ORDER BY combined.date DESC
+        $sql =  "SELECT 
+        'comment' AS type,
+        postscomment.cmt_id AS item_id,
+        postscomment.user_id as user,
+        postscomment.posts_id,
+        postscomment.comment AS content,
+        postscomment.date_cmt AS datetime
+    FROM 
+        postscomment
+        
+    WHERE 
+        postscomment.posts_id IN (SELECT posts_id FROM posts WHERE user_id = $user_id)
+         AND postscomment.user_id != $user_id
+    UNION ALL
+    
+    SELECT 
+        'like' AS type,
+        postlike.postlike_id AS item_id,
+        postlike.user_id as user,
+        postlike.posts_id,
+        NULL AS content,
+        postlike.datetime AS datetime
+    FROM 
+        postlike
+    WHERE 
+        postlike.posts_id IN (SELECT posts_id FROM posts WHERE user_id = $user_id)
+        AND postlike.user_id != $user_id
+    
+    ORDER BY datetime DESC;
+    
         ";
-        $result = $db->pdo_query_one($sql);
+        $result = $db->pdo_query($sql);
         return $result;
     }
 }

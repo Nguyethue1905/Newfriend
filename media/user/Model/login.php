@@ -45,7 +45,7 @@ class login{
         $db = new connect();
         $select = "INSERT INTO `time_login` ( `user_id`, `login_time`) VALUES ('$user_id', NOW()); ";
         return $db->pdo_query_one($select);
-
+    }
     function all_user()
     {
         $db = new connect();
@@ -53,7 +53,7 @@ class login{
         return $db->pdo_query($select);
 
     }
-}
+
 }
 
 class singin {

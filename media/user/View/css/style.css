@@ -472,6 +472,7 @@ section {
 button,
 html [type="button"] {
     cursor: pointer;
+
 }
 
 textarea {

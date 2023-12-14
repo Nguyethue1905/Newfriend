@@ -14,6 +14,20 @@ class signup
         $result = $db->pdo_query($sql);
         return $result;
     }
+    public function getname_count($user_id, $name_count,$brithdate)
+    {
+        $db = new connect();
+        $sql = "INSERT INTO userproflie (`user_id`,`name_count`,`brithdate`) VALUES ('$user_id','$name_count','$brithdate')";
+        $result = $db->pdo_query($sql);
+        return $result;
+    }
+    
+    public function getid(){
+        $db = new connect();
+        $sql =  "SELECT MAX(user_id) AS user_id FROM users" ;
+        $result = $db->pdo_query_one($sql);
+        return $result;
+    }
 
     public function checkIfEmailExists($email)
     {
@@ -56,6 +70,8 @@ class register
             $username = $_POST['username'] ?? "";
             $email = $_POST['email'] ?? "";
             $passwords = $_POST['password'] ?? "";
+            $name_count = $_POST['name_count'] ?? "";
+            $brithdate = $_POST['brithdate'] ?? "";
             $data = new signup();
             $login = new login();
             $setemail = $data->checkIfEmailExists($email);
@@ -74,6 +90,9 @@ class register
                 if ($_POST['password'] == $_POST['re_password']) {
                     $password = password_hash($passwords, PASSWORD_DEFAULT);
                     $data->getAdd($username, $email, $password);
+                    $name = $data->getid();
+                    $user_id = $name['user_id'];
+                    $data->getname_count($user_id, $name_count, $brithdate);
                     $_SESSION['user'] = $username;
                     if (password_verify($passwords, $password)){
                         $id = $login->getUserid($username, $password);
