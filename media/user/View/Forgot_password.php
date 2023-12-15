@@ -61,11 +61,11 @@ if (isset($_POST['send'])) {
                     <p class="title">Quên mật khẩu</p>
                     <label>
                         <span class="ll">Nhập mật khẩu mới</span>
-                        <input required="" placeholder="" type="text" class="input" name="password" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" title="Ít nhất 8 ký tự, gồm ít nhất một chữ cái và một số" required>
+                        <input required="" placeholder="" type="password" class="input" name="password" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" title="Ít nhất 8 ký tự, gồm ít nhất một chữ cái và một số" required>
                     </label>
                     <label>
                         <span class="ll">Nhập lại mật khẩu mới</span>
-                        <input required="" placeholder="" type="text" class="input" name="re_password">
+                        <input required="" placeholder="" type="password" class="input" name="re_password">
                     </label>
                     <button class="submit" name="btn-readd">Cập nhật</button>
                 </form>
@@ -95,8 +95,9 @@ if (isset($_POST['send'])) {
 } elseif (isset($_POST['btn-readd'])) {
     if ($_POST['password'] == $_POST['re_password']) {
         $email = $_SESSION['email'];
-        $password = $_POST['password'] ?? "";
+        $passwords = $_POST['password'] ?? "";
         $db = new signup();
+        $password = password_hash($passwords, PASSWORD_DEFAULT);
         $reset = $db->addpassword($password, $email);
         header('Location: ./index.php?act=home');
     } else {

@@ -10,7 +10,7 @@ class looking_for_friends
     var $following_id = null;
     var $friendship_id = null;
     var $user_id_s = null;
-    
+
     public function search_friends($searchfr)
     {
         $db = new connect();
@@ -39,20 +39,20 @@ class looking_for_friends
         $result = $db->pdo_query_one($sql);
         return $result;
     }
-    public function getidfol($user_id_s)
+    public function getidfol($user_id)
     {
         $db = new connect();
-        $sql = "SELECT friendship.user_id AS idfrend, friendship.following_id AS fl_id, friendship.friendship_id AS id_fs, friendship.status AS status FROM friendship INNER JOIN users ON friendship.following_id = users.user_id INNER JOIN userproflie ON users.user_id = userproflie.user_id WHERE friendship.following_id='$user_id_s'";
+        $sql = "SELECT users.*, userproflie.*, friendship.user_id AS idfrend, friendship.following_id AS fl_id, friendship.friendship_id AS id_fs, friendship.status AS status 
+        FROM friendship 
+        INNER JOIN users ON friendship.user_id = users.user_id 
+        INNER JOIN userproflie ON users.user_id = userproflie.user_id 
+        WHERE (friendship.following_id = $user_id OR friendship.user_id = $user_id) 
+          AND friendship.status = 'Đã gữi lời mời';
+        ";
         $result = $db->pdo_query($sql);
         return $result;
     }
-    public function getid($user_id)
-    {
-        $db = new connect();
-        $sql =  "SELECT * FROM userproflie WHERE user_id = '$user_id'";
-        $result = $db->pdo_query($sql);
-        return $result;
-    }
+
     public function getyes($friendship_id)
     {
         $db = new connect();
@@ -77,7 +77,16 @@ class looking_for_friends
     public function list_frents($user_id)
     {
         $db = new connect();
-        $sql =  "SELECT userproflie.name_count, users.user_id as user, userproflie.avatar, friendship.friendship_id, friendship.following_id, friendship.status, friendship.user_id FROM friendship INNER JOIN users ON users.user_id = friendship.user_id INNER JOIN userproflie ON userproflie.user_id = users.user_id WHERE friendship.status = 'Kết bạn thành công' AND (friendship.user_id = '$user_id' or friendship.following_id = '$user_id') UNION SELECT userproflie.name_count, users.user_id as user, userproflie.avatar, friendship.friendship_id, friendship.following_id, friendship.status, friendship.user_id FROM friendship INNER JOIN users ON users.user_id = friendship.following_id INNER JOIN userproflie ON userproflie.user_id = users.user_id WHERE friendship.status = 'Kết bạn thành công' AND (friendship.user_id = '$user_id' or friendship.following_id = '$user_id');";
+        $sql =  "SELECT userproflie.name_count, users.user_id as user, userproflie.avatar, friendship.friendship_id, friendship.following_id, friendship.status, friendship.user_id 
+        FROM friendship 
+        INNER JOIN users ON users.user_id = friendship.user_id 
+        INNER JOIN userproflie ON userproflie.user_id = users.user_id 
+        WHERE friendship.status = 'Kết bạn thành công' AND (friendship.user_id = $user_id or friendship.following_id = $user_id) AND users.user_id != $user_id
+        UNION SELECT userproflie.name_count, users.user_id as user, userproflie.avatar, friendship.friendship_id, friendship.following_id, friendship.status, friendship.user_id 
+        FROM friendship 
+        INNER JOIN users ON users.user_id = friendship.following_id 
+        INNER JOIN userproflie ON userproflie.user_id = users.user_id 
+        WHERE friendship.status = 'Kết bạn thành công' AND (friendship.user_id = $user_id or friendship.following_id = $user_id) AND users.user_id != $user_id";
         $result = $db->pdo_query($sql);
         return $result;
     }
@@ -104,7 +113,7 @@ class looking_for_friends
         $db = new connect();
         $sql =  "SELECT COUNT(friendship.status) as total
         FROM friendship
-        WHERE (friendship.following_id = '$user_id' OR friendship.user_id = '$user_id') AND status = 'Đã gữi lời mời'";
+        WHERE  friendship.following_id = '$user_id' AND status = 'Đã gữi lời mời'";
         $result = $db->pdo_query_one($sql);
         return $result;
     }
@@ -125,7 +134,7 @@ class looking_for_friends
         AND users.user_id != $user_id 
         GROUP BY posts.posts_id,userproflie.name_count,userproflie.avatar,postscomment.date_cmt,postscomment.comment,
         friendship.friendship_id,friendship.following_id ,postscomment.cmt_id 
-        ORDER BY postscomment.date_cmt DESC;";
+        ORDER BY postscomment.date_cmt DESC as cmt ";
         $result = $db->pdo_query($sql);
         return $result;
     }
@@ -142,7 +151,7 @@ class looking_for_friends
         AND (friendship.user_id = $user_id OR friendship.following_id = $user_id))
         AND users.user_id !=$user_id
         GROUP BY posts.posts_id,userproflie.name_count,userproflie.avatar
-        ORDER BY posts.date_post DESC";
+        ORDER BY posts.date_post DESC ";
         $result = $db->pdo_query($sql);
         return $result;
     }
@@ -161,7 +170,7 @@ class looking_for_friends
         AND users.user_id != $user_id
         GROUP BY posts.posts_id,userproflie.name_count,userproflie.avatar,postlike.postlike_id,
         postlike.user_id, friendship.friendship_id,friendship.following_id 
-        ORDER BY postlike.datetime DESC;";
+        ORDER BY postlike.datetime DESC as likes ";
         $result = $db->pdo_query($sql);
         return $result;
     }
@@ -170,16 +179,38 @@ class looking_for_friends
     public function bell($user_id)
     {
         $db = new connect();
-        $sql =  "SELECT * FROM (
-            (SELECT postscomment.date_cmt AS date FROM postscomment)
-            UNION ALL
-            (SELECT posts.date_post AS date  FROM posts)
-            UNION ALL
-            (SELECT postlike.datetime AS date FROM postlike)
-        ) AS combined
-        ORDER BY combined.date DESC
+        $sql =  "SELECT 
+        'comment' AS type,
+        postscomment.cmt_id AS item_id,
+        postscomment.user_id as user,
+        postscomment.posts_id,
+        postscomment.comment AS content,
+        postscomment.date_cmt AS datetime
+    FROM 
+        postscomment
+        
+    WHERE 
+        postscomment.posts_id IN (SELECT posts_id FROM posts WHERE user_id = $user_id)
+         AND postscomment.user_id != $user_id
+    UNION ALL
+    
+    SELECT 
+        'like' AS type,
+        postlike.postlike_id AS item_id,
+        postlike.user_id as user,
+        postlike.posts_id,
+        NULL AS content,
+        postlike.datetime AS datetime
+    FROM 
+        postlike
+    WHERE 
+        postlike.posts_id IN (SELECT posts_id FROM posts WHERE user_id = $user_id)
+        AND postlike.user_id != $user_id
+    
+    ORDER BY datetime DESC;
+    
         ";
-        $result = $db->pdo_query_one($sql);
+        $result = $db->pdo_query($sql);
         return $result;
     }
 }

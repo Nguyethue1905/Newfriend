@@ -21,13 +21,7 @@ $name = $select['name_count'] ?? "";
 			?>
 			
 		</figure>
-		<form class="edit-phto-cover" style="left:80%;">
-			<label class="fileContainers" style="left:80%; bottom:50px; font-size: 14px; border-radius: 10px;">
-				<i class="fa fa-camera-retro"></i>
-				Đổi ảnh bìa
-				<input type="file" name="image-cover" id="image-cover" accept=".jpg, .jpeg, .png" onclick="toggleElements()">
-			</label>
-		</form>
+		
 	</form>
 	<div class="container-fluid">
 		<div class="row merged">
@@ -45,13 +39,6 @@ $name = $select['name_count'] ?? "";
 								echo '<img src="./View/images/uploads/'.$select['avatar'].'" alt="">';
 							}
 							?>
-							
-							<form class="edit-phto-ava">
-								<label class="fileContainer" style=" position: absolute;top:85%;color: #08d5a9;right: 20%;">
-									<i class="fa fa-camera-retro" style="font-size: 30px;"></i>
-									<input type="file" name="image-avatar" id="image" accept=".jpg, .jpeg, .png" onclick="toggleElement()">
-								</label>
-							</form>
 						</figure>
 					</div>
 				</form>

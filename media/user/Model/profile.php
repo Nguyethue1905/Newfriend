@@ -33,6 +33,30 @@ class profile
         $result = $db->pdo_query_one($sql);
         return $result; 
     }
+    public function getUser($user_id){
+        $db = new connect();
+        $sql =  "SELECT users.*, userproflie.*
+        FROM users
+        INNER JOIN userproflie ON users.user_id = userproflie.user_id
+        LEFT JOIN friendship ON (users.user_id = friendship.following_id AND friendship.user_id = $user_id) OR (users.user_id = friendship.user_id AND friendship.following_id = $user_id)
+        WHERE users.user_id != $user_id AND (friendship.friendship_id IS NULL OR (friendship.status != 'Kết bạn thành công' AND friendship.status != 'Đã gữi lời mời'))
+        ORDER BY users.user_id DESC";
+        $result = $db->pdo_query($sql);
+        return $result; 
+    }
+    
+    public function getFr($user_id){
+        $db = new connect();
+        $sql =  "SELECT users.*, userproflie.*
+        FROM users
+        INNER JOIN userproflie ON users.user_id = userproflie.user_id
+        LEFT JOIN friendship ON (users.user_id = friendship.following_id AND friendship.user_id = $user_id) OR (users.user_id = friendship.user_id AND friendship.following_id = $user_id)
+        WHERE friendship.status = 'Kết bạn thành công' AND friendship.status = 'Đã gữi lời mời'
+        ORDER BY users.user_id DESC";
+        $result = $db->pdo_query($sql);
+        return $result; 
+    }
+    
   
 }
 

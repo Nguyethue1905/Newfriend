@@ -13,6 +13,7 @@ $name = $select['name_count'] ?? "";
 			$cover_img = $select['cover_img'] ??"";
 			$_SESSION['cover_img'] = $cover_img;
 			
+			
 			if($cover_img == ""){
 				echo '<img src="./View/images/uploads/cover.jpg" alt="">';
 			}else{

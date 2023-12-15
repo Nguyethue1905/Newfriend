@@ -11,8 +11,16 @@
             <input required="" placeholder="" type="text" class="input" name="username">
         </label>
         <label>
+            <span class="ll">Tên tài khoản</span>
+            <input required="" placeholder="" type="text" class="input" name="name_count">
+        </label>
+        <label>
             <span class="ll">Email</span>
             <input required="" placeholder="" type="email" class="input" name="email">
+        </label>
+        <label>
+            <span class="ll">Ngày sinh</span>
+            <input required="" placeholder="" type="date" class="input" name="brithdate">
         </label>
 
         <label>
@@ -25,8 +33,7 @@
         </label>
         <label>
             <span class="ll"><a href="./View/baomat.php">Tôi đồng ý với điều khoản và điều kiện </a></span>
-            <input type="checkbox" name="agree" value="1" required> 
-            
+            <input type="checkbox" name="agree" value="1" required>   
         </label>
         <button class="submit" name="btn-signup">Đăng ký</button>
         <p class="signin">Bạn đã có tài khoản ?<a href="./index.php?act=login">Đăng nhập</a> </p>
