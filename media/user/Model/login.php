@@ -45,7 +45,7 @@ class login{
         $db = new connect();
         $select = "INSERT INTO `time_login` ( `user_id`, `login_time`) VALUES ('$user_id', NOW()); ";
         return $db->pdo_query_one($select);
-
+    }
     function all_user()
     {
         $db = new connect();
@@ -53,7 +53,7 @@ class login{
         return $db->pdo_query($select);
 
     }
-}
+
 }
 
 class singin {
@@ -65,8 +65,8 @@ class singin {
         $login = new login();
         
         $user = $login->check_login($username);
-        $psw =  password_verify($password, $user['password']);
-        $user_status = $user['user_status'];
+        $psw =  password_verify($password, $user['password'] ?? "");
+        $user_status = $user['user_status'] ?? "";
         if ($user && $psw){
           if ($user_status == 3){
             echo '<div style="color: red;">Tài khoản của bạn đã bị khoá</div>';

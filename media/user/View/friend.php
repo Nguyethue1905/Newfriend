@@ -80,7 +80,7 @@
 												<h4><a href="time-line.html" title="">'.$row['name_count'].'</a></h4>
 												<span>ftv model</span>
 												
-												<a href="" title="" class="add-butn more-action btnls"   data-idship="'.$friendship_id.'" data-ripple="" >Xóa lời mời</a>
+												<a href="" title="" class="add-butn more-action btnls"  data-idship="'.$friendship_id.'" data-ripple="" >Xóa lời mời</a>
 			
 												<a href="" title="" class="add-butn btn-idyes" data-idyes="'.$friendship_id.'" data-ripple="">Đồng ý</a>
 											
