@@ -12,10 +12,11 @@
 										$search_friends = $looking_for_friends->search_friends($searchfr);
 										if ($search_friends == true){
 											foreach ($search_friends as $friend){
+												$_SESSION['user_id'] = $friend['user_id'];
 												echo $tl = '<li>
 												<div class="nearly-pepls">
 													<figure>
-														<a href="" title=""><img src="./View/images/resources/group1.jpg" alt=""></a>
+														<a href="" title=""><img src="./View/images/uploads/'.($avatar ? $avatar : 'avatar.jpg').'" alt=""></a>
 													</figure>
 													<div class="pepl-info">
 														<h4><a href="" title="">'.$friend['name_count'].'</a></h4>
@@ -25,9 +26,11 @@
 													</div>
 												</div>
 											</li>';
-											}  
+											}
+											
 										}else{
 											echo 'lỗi';
+												
 										}
 									}
 								?>

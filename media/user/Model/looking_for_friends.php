@@ -14,7 +14,14 @@ class looking_for_friends
     public function search_friends($searchfr)
     {
         $db = new connect();
-        $sql =  "SELECT * FROM userproflie WHERE name_count LIKE '%$searchfr%';";
+        $sql =  "SELECT * FROM userproflie INNER JOIN users ON userproflie.user_id = users.user_id LEFT JOIN friendship ON friendship.user_id = users.user_id OR users.user_id = friendship.following_id WHERE userproflie.name_count LIKE '%$searchfr%'";
+        $result = $db->pdo_query($sql);
+        return $result;
+    }
+    public function search_userproflie($searchfr)
+    {
+        $db = new connect();
+        $sql =  "SELECT * FROM users WHERE username LIKE '%$searchfr%';";
         $result = $db->pdo_query($sql);
         return $result;
     }

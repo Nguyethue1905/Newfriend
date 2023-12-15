@@ -65,8 +65,8 @@ class singin {
         $login = new login();
         
         $user = $login->check_login($username);
-        $psw =  password_verify($password, $user['password']);
-        $user_status = $user['user_status'];
+        $psw =  password_verify($password, $user['password'] ?? "");
+        $user_status = $user['user_status'] ?? "";
         if ($user && $psw){
           if ($user_status == 3){
             echo '<div style="color: red;">Tài khoản của bạn đã bị khoá</div>';

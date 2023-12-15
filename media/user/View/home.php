@@ -152,10 +152,7 @@ $select = $db->getList($user_id);
                         <?php
                         }
                         ?>
-
-
-
-
+                        
                         <div class="we-video-info">
                             <ul>
                                 <!-- like -->
