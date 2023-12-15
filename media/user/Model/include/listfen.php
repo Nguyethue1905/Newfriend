@@ -13,7 +13,7 @@ $select = $db->getList($user_id);
                         $user_id = $_SESSION['id'];
                         $db = new profile();
                         $select = $db->getImg($user_id);
-                        $name=$db->getList($user_id);
+                        $name = $db->getList($user_id);
                         $avatar = $select['avatar'] ?? "";
                         if ($avatar == "") {
                             echo '<img src="./View/images/uploads/avatar.jpg" alt="" class="user-avatars">';
@@ -25,7 +25,7 @@ $select = $db->getList($user_id);
                 </figure>
                 <div class="page-meta">
                     <a href="#" title="" class="underline"><?= $select['name_count'] ?? "" ?></a>
-                    <span><a href="insight.html" title=""><?=$name['name_count']??""?></a></span>
+                    <span><a href="insight.html" title=""><?= $name['name_count'] ?? "" ?></a></span>
                 </div>
                 <div class="page-likes">
                     <ul class="nav nav-tabs likes-btn">
@@ -33,19 +33,19 @@ $select = $db->getList($user_id);
                         <li class="nav-item"><a class="" href="#link2" data-toggle="tab">Lời mời</a></li>
                     </ul>
                     <!-- Tab panes -->
-                    <?php 
+                    <?php
                     $db = new looking_for_friends();
                     $user_id = $_SESSION['id'];
                     $get = $db->total_frents($user_id);
                     $total =  $get['total'];
                     $select = $db->addfr($user_id);
                     $count = $select['total'];
-                    
+
                     ?>
                     <div class="tab-content">
                         <div class="tab-pane active fade show " id="link1">
-                            <span><i class="ti-eye"></i><?=$total?></span>
-                            <a href="#" title="weekly-likes"><?=$total?> Bạn bè</a>
+                            <span><i class="ti-eye"></i><?= $total ?></span>
+                            <a href="#" title="weekly-likes"><?= $total ?> Bạn bè</a>
                             <div class="users-thumb-list">
                                 <a href="#" title="Anderw" data-toggle="tooltip">
                                     <img src="./View/images/resources/userlist-1.jpg" alt="">
@@ -55,12 +55,12 @@ $select = $db->getList($user_id);
                                 </a>
                                 <a href="#" title="Sara" data-toggle="tooltip">
                                     <img src="./View/images/resources/userlist-3.jpg" alt="">
-</a>
+                                </a>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="link2">
-                            <span><i class="ti-eye"></i><?=$count?></span>
-                            <a href="#" title="weekly-likes"><?=$count?> Lời mời kết bạn</a>
+                            <span><i class="ti-eye"></i><?= $count ?></span>
+                            <a href="#" title="weekly-likes"><?= $count ?> Lời mời kết bạn</a>
                             <div class="users-thumb-list">
                                 <a href="#" title="Anderw" data-toggle="tooltip">
                                     <img src="./View/images/resources/userlist-1.jpg" alt="">
@@ -84,76 +84,40 @@ $select = $db->getList($user_id);
             <h4 class="widget-title">Chat</h4>
             <div id="searchDir"></div>
             <ul id="people-list" class="friendz-list">
+            <?php
+                $user_id = $_SESSION['id'];
+                $db = new looking_for_friends();
+                $get = $db->list_frents($user_id);
+                foreach($get as $item){
+                ?>
                 <li>
                     <figure>
-                        <img src="./View/images/resources/friend-avatar.jpg" alt="">
+                        <?php
+                         $avatar = $item['avatar'] ?? "";
+                         if ($avatar == "") {
+                             echo '<img src="./View/images/uploads/avatar.jpg" alt="">';
+                         } else {
+                             echo '<img src="./View/images/uploads/' . $avatar . '" alt="">';
+                         }
+                        ?>
                         <span class="status f-online"></span>
                     </figure>
                     <div class="friendz-meta">
-                        <a href="time-line.html">Usernamw</a>
+                        <a href="time-line.html"><?=$item['name_count']?></a>
                     </div>
                 </li>
-                <li>
-                    <figure>
-                        <img src="./View/images/resources/friend-avatar2.jpg" alt="">
-                        <span class="status f-away"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">Nguyệt Hu</a>
-                    </div>
-                </li>
-                <li>
-                    <figure>
-                        <img src="./View/images/resources/friend-avatar3.jpg" alt="">
-                        <span class="status f-off"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">bucky barnes</a>
-                    </div>
-                </li>
-                <li>
-                    <figure>
-                        <img src="./View/images/resources/friend-avatar4.jpg" alt="">
-                        <span class="status f-off"></span>
-                    </figure>
-                        <div class="friendz-meta">
-                        <a href="time-line.html">bucky barnes</a>
-                    </div>
-                </li>
-                <li>
-
-                    <figure>
-                        <img src="./View/images/resources/friend-avatar5.jpg" alt="">
-                        <span class="status f-online"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">bucky barnes</a>
-                    </div>
-                </li>
-                <li>
-
-                    <figure>
-                        <img src="./View/images/resources/friend-avatar6.jpg" alt="">
-                        <span class="status f-away"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">andrew</a>
-                    </div>
-                </li>
-                <li>
-                    <figure>
-                        <img src="./View/images/resources/friend-avatar2.jpg" alt="">
-                        <span class="status f-away"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">Sarah Loren</a>
-                    </div>
-                </li>
+                <?php } ?>
             </ul>
+            <?php
+                $user_id = $_SESSION['id'];
+                $db = new looking_for_friends();
+                $get = $db->list_frents($user_id);
+                foreach($get as $item){
+                ?>
             <div class="chat-box">
                 <div class="chat-head">
                     <span class="status f-online"></span>
-                    <h6>Bucky Barnes</h6>
+                    <h6><?=$item['name_count']?></h6>
                     <div class="more">
                         <span><i class="ti-more-alt"></i></span>
                         <span class="close-mesage"><i class="ti-close"></i></span>
@@ -177,7 +141,7 @@ $select = $db->getList($user_id);
                                 <span class="chat-message-item">
                                     Hi James! Please remember to buy the food for tomorrow! I’m gonna be handling the gifts and Jake’s gonna get the drinks
                                 </span>
-<span class="notification-date"><time datetime="2004-07-24T18:18" class="entry-date updated">Yesterday at 8:10pm</time></span>
+                                <span class="notification-date"><time datetime="2004-07-24T18:18" class="entry-date updated">Yesterday at 8:10pm</time></span>
                             </div>
                         </li>
                         <li class="me">
@@ -213,6 +177,7 @@ $select = $db->getList($user_id);
                     </form>
                 </div>
             </div>
+            <?php } ?>
         </div><!-- friends list sidebar -->
     </aside>
 </div><!-- sidebar -->

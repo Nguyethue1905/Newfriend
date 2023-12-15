@@ -36,41 +36,32 @@
         <div class="widget stick-widget">
             <h4 class="widget-title">Gợi ý kết bạn</h4>
             <ul class="followers">
+                <?php
+                $user_id = $_SESSION['id'];
+                $db = new profile();
+                $get = $db->getUser($user_id);
+                foreach($get as $item){
+                ?>
                 <li>
-                    <figure><img src="./View/images/resources/friend-avatar2.jpg" alt=""></figure>
+                    <figure>
+                        <?php
+                         $avatar = $item['avatar'] ?? "";
+                         if ($avatar == "") {
+                             echo '<img src="./View/images/uploads/avatar.jpg" alt="">';
+                         } else {
+                             echo '<img src="./View/images/uploads/' . $avatar . '" alt="">';
+                         }
+                        ?>
+                        
+                    </figure>
                     <div class="friend-meta">
-                        <h4><a href="time-line.html" title="">Kelly Bill</a></h4>
+                        <h4><a href="time-line.html" title=""><?=$item['name_count']?></a></h4>
                         <a href="#" title="" class="underline" type="submit">Kết bạn</a>
                     </div>
                 </li>
-                <li>
-                    <figure><img src="./View/images/resources/friend-avatar4.jpg" alt=""></figure>
-                    <div class="friend-meta">
-                        <h4><a href="time-line.html" title="">Issabel</a></h4>
-                        <a href="#" title="" class="underline" type="submit">Kết bạn</a>
-                    </div>
-                </li>
-                <li>
-                    <figure><img src="./View/images/resources/friend-avatar6.jpg" alt=""></figure>
-                    <div class="friend-meta">
-                        <h4><a href="time-line.html" title="">Andrew</a></h4>
-                        <a href="#" title="" class="underline" type="submit">Kết bạn</a>
-                    </div>
-                </li>
-                <li>
-                    <figure><img src="./View/images/resources/friend-avatar8.jpg" alt=""></figure>
-                    <div class="friend-meta">
-                        <h4><a href="time-line.html" title="">Sophia</a></h4>
-                        <a href="#" title="" class="underline" type="submit">Kết bạn</a>
-                    </div>
-                </li>
-                <li>
-                    <figure><img src="./View/images/resources/friend-avatar3.jpg" alt=""></figure>
-                    <div class="friend-meta">
-                        <h4><a href="time-line.html" title="">Allen</a></h4>
-                        <a href="#" title="" class="underline" type="submit">Kết bạn</a>
-                    </div>
-                </li>
+                <?php
+                }
+                ?>
             </ul>
         </div><!-- who's following -->
     </aside>

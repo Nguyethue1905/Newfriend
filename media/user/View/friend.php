@@ -27,7 +27,7 @@
 						$list_frents = $looking_for_friends->list_frents($user_id);
 							foreach($list_frents as $iem){
 								$user = $iem['user'];
-								$avatar = $iem['avatar'];
+								$avatar = $iem['avatar'] ?? "avatar.jpg";
 								if ($user_id !== $user)
 								echo '<li>
 								<div class="nearly-pepls">
@@ -55,30 +55,26 @@
 					<ul class="nearby-contct is">
 					
 						<?php
-							$user_id_s = $_SESSION['id'];
+							$user_id= $_SESSION['id'];
 							$looking_for_friends = new looking_for_friends();
-							$getidfol = $looking_for_friends->getidfol($user_id_s);
+							$getidfol = $looking_for_friends->getidfol($user_id);
 							foreach ($getidfol as $all){
 								// $user_ids = $_SESSION['id'];
 								$friendship_id = $all['id_fs'];
 								$_SESSION['friendship_id'] = $friendship_id;
 
 								$following_id = $all['fl_id']; 
-								$user_id = $all['idfrend'];
 								$status = $all['status'];
 
 
-								if ($friendship_id && $user_id_s == $following_id && trim($status) == "Đã gữi lời mời"){
-									$getalls = $looking_for_friends->getid($user_id);
-									foreach ($getalls as $row){
+								if ($friendship_id && $user_id == $following_id && trim($status) == "Đã gữi lời mời"){
 										echo '<li>
 										<div class="nearly-pepls">
 											<figure>
-												<a href="" title=""><img src="./View/images/resources/nearly5.jpg" alt=""></a>
+												<a href="" title=""><img src="./View/images/uploads/'.($all['avatar'] ? $all['avatar'] :'avatar.jpg').'" alt=""></a>
 											</figure>
 											<div class="pepl-info">
-												<h4><a href="time-line.html" title="">'.$row['name_count'].'</a></h4>
-												<span>ftv model</span>
+												<h4><a href="time-line.html" title="">'.$all['name_count'].'</a></h4>
 												
 												<a href="" title="" class="add-butn more-action btnls"   data-idship="'.$friendship_id.'" data-ripple="" >Xóa lời mời</a>
 			
@@ -87,7 +83,7 @@
 											</div>
 										</div>
 									</li>';
-									}	
+									
 								}
 							}
 						?>

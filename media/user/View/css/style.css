@@ -2332,6 +2332,7 @@ span.status.f-off {
     font-size: 14px;
     text-transform: capitalize;
     width: 100%;
+    margin-left:10px;
 }
 
 
@@ -4300,15 +4301,12 @@ a.forgot-pwd {
     width: 86%;
 }
 
-.notifi-meta > h6 {
-    font-size: 13px;
-    color: #999;
-    margin-left:50px;
-}
+
 
 .notifi-meta > span {
     color: #999;
     font-size: 12px;
+    
 }
 
 .notification-box > ul > li:last-child {

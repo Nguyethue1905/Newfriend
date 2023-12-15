@@ -32,9 +32,9 @@ class upload
     public function loadimg(){
         if (isset($_FILES['image-avatar']['name'])) {
             $user_id = $_SESSION['id'];
-            $imgName = $_FILES['image']['name'];
-            $imgSize = $_FILES['image']['size'];
-            $tmpName = $_FILES['image']['tmp_name'];
+            $imgName = $_FILES['image-avatar']['name'];
+            $imgSize = $_FILES['image-avatar']['size'];
+            $tmpName = $_FILES['image-avatar']['tmp_name'];
         
             $validImageExtension = ['jpg', 'jpeg', 'png', 'gif'];
             $imageExtension = explode('.', $imgName);

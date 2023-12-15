@@ -18,7 +18,7 @@
 							<a href="./index.php?act=insights&id_post=' . $item['posts_id'] . '">
 								<figure><img onclick="coutss()" src="./View/images/uploads/' . ($profile['avatar'] ? $profile['avatar'] : 'avatar.jpg') . '" alt=""></figure>
 								<div class="notifi-meta">
-									<p><h6>' . $profile['name_count'] . '</h6><p> vừa yêu thích bài viết của bạn</p></p>
+									<p style="font-size:17px;">' . $profile['name_count'] . ' </p> vừa yêu thích bài viết của bạn
 									<span>' . $item['datetime'] . '</span>
 								</div>
 							</a>
@@ -28,11 +28,9 @@
 							<a href="./index.php?act=insights&id_post=' . $item['posts_id']. '">
 								<figure><img onclick="coutss()" src="./View/images/uploads/' . ($profile['avatar'] ? $profile['avatar'] : 'avatar.jpg') . '" alt=""></figure>
 								<div class="notifi-meta">
-									<p><h6>' . $profile['name_count'] . '</h6><p> đã bình luận bài viết của bạn</p></p>
-									
+									<p style="font-size:17px;">' . $profile['name_count'] . '</p> đã bình luận bài viết của bạn
 									<span>' . $item['datetime'] . '</span>
 								</div>
-							</a>
 						</li>';
 						}else{
 							echo "";

@@ -16,7 +16,7 @@ $select = $db->getList($user_id);
         $name = $get['name_count'] ?? "?     ?";
         $posts_id = $get['posts_id'];
         $_SESSION['posts_id'] = $posts_id;
-
+        $user_post = $get['user_post'];
         $db = new posts();
         $time = $db->getDate($posts_id);
 
@@ -59,17 +59,26 @@ $select = $db->getList($user_id);
                         ?>
                     </figure>
                     <div class="friend-name">
-                        <ins><a href="time-line.html" title=""><?= $name ?></a></ins>
+                        <ins><a href="./index.php?act=useracout&id=<?= $user_post ?>" title=""><?= $name ?></a></ins>
                         <span><?= $timeString ?></span>
                     </div>
                     <!-- Delete post -->
-                    <div class="dropdown-post">
+                    <?php
+                    if($user_id == $user_post){
+                        echo '
+                        <div class="dropdown-post">
                         <button class="dropbtn">&#8942;</button>
                         <div class="dropdown-content">
-                            <a class="delete" data-delete="<?= $get['posts_id'] ?>">Xóa bài viết</a>
+                            <a class="delete" data-delete="'. $get['posts_id'].'">Xóa bài viết</a>
                         </div>
                     </div>
 
+                        ';
+                    }else{
+                        echo '';
+                    }
+                    ?>
+                    
 
                     <div class="description">
                         <p>
@@ -173,9 +182,9 @@ $select = $db->getList($user_id);
                                             }
                                         } elseif ($like == "") {
                                             echo '
-                                                    
                                                     <a type="submit" class="likeInput"  name="likeInput" data-postlike="' . $get['posts_id'] . '">
-                                                    <i class="fa-regular fa-heart" style="color: #08d5a9; font-size:24px;"></i> </a>
+                                                    <i class="fa-regular fa-heart" style="color: #08d5a9; font-size:24px;"></i> 
+                                                    </a>
                                                 ';
                                         }
 
@@ -241,7 +250,7 @@ $select = $db->getList($user_id);
                                                         var result = JSON.parse(result);
                                                         // $('.like').load(location.href + ' .like');
                                                         if (result.status === 'success') {
-                                                            $('.user-post<?= $get['posts_id'] ?>').load(location.href + ' .user-post<?= $get['posts_id'] ?>');
+                                                            location.reload();
                                                             console.log('xoá thành công');
 
                                                         } else {
@@ -251,7 +260,6 @@ $select = $db->getList($user_id);
                                                 });
                                             });
                                         });
-
 
                                         jQuery(document).ready(function($) {
                                             $(document).on("click", ".delete", function(event) {
@@ -272,7 +280,7 @@ $select = $db->getList($user_id);
                                                             text + "</strong> degrees");
                                                         console.log(text);
                                                         if (text == true) {
-                                                            $('.user-post<?= $get['posts_id'] ?>').load(location.href + ' .user-post<?= $get['posts_id'] ?>');
+                                                            location.reload();
                                                             console.log('Xóa thành công');
                                                         } else {
                                                             console.log('lỗi');
@@ -318,13 +326,13 @@ $select = $db->getList($user_id);
                                     <a class="inputs submit-cmt" type="submit" name="submit-cmt" data-post="<?= $get['posts_id'] ?>" placeholder="Bình luận"> Gửi</a>
                                 </div>
                             </form>
-                            
+
                         </div>
                     </div>
                 </div>
 
             </div>
-       
+
 
 
             <!--cmt deatail start -->
@@ -375,7 +383,7 @@ $select = $db->getList($user_id);
 
                             <div class="we-comment">
                                 <div class="coment-head">
-                                    <h5><a href="" title=""><?= $get['name_count'] ?></a></h5>
+                                    <h5><a href="./index.php?act=useracout&id=<?= $user_post ?>" title=""><?= $name ?></a><?= $get['name_count'] ?></a></h5>
                                     <span><?= $timeString ?></span>
                                     <button onclick="cmt_user()" style="border: none;"><i class="fa fa-reply"></i></button>
                                 </div>
@@ -395,7 +403,7 @@ $select = $db->getList($user_id);
 
 
         </div>
-<?php }  ?>
+    <?php }  ?>
 
 </div>
 
@@ -425,37 +433,36 @@ $user_id = $_SESSION['id'];
 ?>
 
 <script>
-            
-                jQuery(document).ready(function($) {
-                    $(document).on("click", ".submit-cmt", function(event) {
-                        event.preventDefault();
-                        var button = $(this);
-                        var post_id = button.data('post');
-                        var content = $('#binhluan_' + post_id).val();
-                        var user_id_in_js = <?php echo json_encode($user_id); ?>;
+    jQuery(document).ready(function($) {
+        $(document).on("click", ".submit-cmt", function(event) {
+            event.preventDefault();
+            var button = $(this);
+            var post_id = button.data('post');
+            var content = $('#binhluan_' + post_id).val();
+            var user_id_in_js = <?php echo json_encode($user_id); ?>;
 
-                        $.ajax({
-                            url: "/user/ajax.php",
-                            method: "POST",
-                            data: {
-                                action: "addCmt",
-                                posts_id: post_id,
-                                user_id: user_id_in_js,
-                                comment: content
-                            },
-                            success: function(result) {
-                                $("#weather-temp").html("<strong>" +
-                                    result + "</strong> degrees");
-                                console.log(result);
-                                if (result == true) {
-                                    location.reload();
-                                    console.log('thành công');     
-                                } else {
-                                    console.log('lỗi');
-                                }
+            $.ajax({
+                url: "/user/ajax.php",
+                method: "POST",
+                data: {
+                    action: "addCmt",
+                    posts_id: post_id,
+                    user_id: user_id_in_js,
+                    comment: content
+                },
+                success: function(result) {
+                    $("#weather-temp").html("<strong>" +
+                        result + "</strong> degrees");
+                    console.log(result);
+                    if (result == true) {
+                        location.reload();
+                        console.log('thành công');
+                    } else {
+                        console.log('lỗi');
+                    }
 
-                            }
-                        });
-                    });
-                });
-            </script>
+                }
+            });
+        });
+    });
+</script>

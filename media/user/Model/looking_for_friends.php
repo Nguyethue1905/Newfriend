@@ -32,20 +32,20 @@ class looking_for_friends
         $result = $db->pdo_query_one($sql);
         return $result;
     }
-    public function getidfol($user_id_s)
+    public function getidfol($user_id)
     {
         $db = new connect();
-        $sql = "SELECT friendship.user_id AS idfrend, friendship.following_id AS fl_id, friendship.friendship_id AS id_fs, friendship.status AS status FROM friendship INNER JOIN users ON friendship.following_id = users.user_id INNER JOIN userproflie ON users.user_id = userproflie.user_id WHERE friendship.following_id='$user_id_s'";
+        $sql = "SELECT users.*, userproflie.*, friendship.user_id AS idfrend, friendship.following_id AS fl_id, friendship.friendship_id AS id_fs, friendship.status AS status 
+        FROM friendship 
+        INNER JOIN users ON friendship.user_id = users.user_id 
+        INNER JOIN userproflie ON users.user_id = userproflie.user_id 
+        WHERE (friendship.following_id = $user_id OR friendship.user_id = $user_id) 
+          AND friendship.status = 'Đã gữi lời mời';
+        ";
         $result = $db->pdo_query($sql);
         return $result;
     }
-    public function getid($user_id)
-    {
-        $db = new connect();
-        $sql =  "SELECT * FROM userproflie WHERE user_id = '$user_id'";
-        $result = $db->pdo_query($sql);
-        return $result;
-    }
+
     public function getyes($friendship_id)
     {
         $db = new connect();
@@ -70,7 +70,16 @@ class looking_for_friends
     public function list_frents($user_id)
     {
         $db = new connect();
-        $sql =  "SELECT userproflie.name_count, users.user_id as user, userproflie.avatar, friendship.friendship_id, friendship.following_id, friendship.status, friendship.user_id FROM friendship INNER JOIN users ON users.user_id = friendship.user_id INNER JOIN userproflie ON userproflie.user_id = users.user_id WHERE friendship.status = 'Kết bạn thành công' AND (friendship.user_id = '$user_id' or friendship.following_id = '$user_id') UNION SELECT userproflie.name_count, users.user_id as user, userproflie.avatar, friendship.friendship_id, friendship.following_id, friendship.status, friendship.user_id FROM friendship INNER JOIN users ON users.user_id = friendship.following_id INNER JOIN userproflie ON userproflie.user_id = users.user_id WHERE friendship.status = 'Kết bạn thành công' AND (friendship.user_id = '$user_id' or friendship.following_id = '$user_id');";
+        $sql =  "SELECT userproflie.name_count, users.user_id as user, userproflie.avatar, friendship.friendship_id, friendship.following_id, friendship.status, friendship.user_id 
+        FROM friendship 
+        INNER JOIN users ON users.user_id = friendship.user_id 
+        INNER JOIN userproflie ON userproflie.user_id = users.user_id 
+        WHERE friendship.status = 'Kết bạn thành công' AND (friendship.user_id = $user_id or friendship.following_id = $user_id) AND users.user_id != $user_id
+        UNION SELECT userproflie.name_count, users.user_id as user, userproflie.avatar, friendship.friendship_id, friendship.following_id, friendship.status, friendship.user_id 
+        FROM friendship 
+        INNER JOIN users ON users.user_id = friendship.following_id 
+        INNER JOIN userproflie ON userproflie.user_id = users.user_id 
+        WHERE friendship.status = 'Kết bạn thành công' AND (friendship.user_id = $user_id or friendship.following_id = $user_id) AND users.user_id != $user_id";
         $result = $db->pdo_query($sql);
         return $result;
     }
@@ -97,7 +106,7 @@ class looking_for_friends
         $db = new connect();
         $sql =  "SELECT COUNT(friendship.status) as total
         FROM friendship
-        WHERE (friendship.following_id = '$user_id' OR friendship.user_id = '$user_id') AND status = 'Đã gữi lời mời'";
+        WHERE  friendship.following_id = '$user_id' AND status = 'Đã gữi lời mời'";
         $result = $db->pdo_query_one($sql);
         return $result;
     }
